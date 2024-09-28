@@ -1,0 +1,16 @@
+// جلوگیری از ریدایرکت به دامنه‌های دیگر و اطمینان از ثابت ماندن بر روی یک دامنه
+function enforce_primary_domain() {
+    $allowed_domain = 'example.com'; // دامنه اصلی شما
+
+    // گرفتن نام دامنه فعلی
+    $current_domain = $_SERVER['HTTP_HOST'];
+
+    // اگر دامنه فعلی با دامنه مجاز متفاوت باشد، ریدایرکت به دامنه اصلی
+    if ($current_domain !== $allowed_domain) {
+        // ریدایرکت به دامنه مجاز با حفظ مسیر URL
+        $current_url = 'https://' . $allowed_domain . $_SERVER['REQUEST_URI'];
+        wp_redirect($current_url, 301);
+        exit;
+    }
+}
+add_action('template_redirect', 'enforce_primary_domain');
