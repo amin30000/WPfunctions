@@ -1,0 +1,22 @@
+// غیرفعال کردن نصب، حذف و به‌روزرسانی افزونه‌ها برای تمام کاربران
+function disable_plugin_installation_admins() {
+    // غیرفعال کردن دسترسی به صفحات نصب و مدیریت افزونه‌ها
+    global $submenu, $pagenow;
+    
+    // جلوگیری از دسترسی به صفحات افزونه‌ها
+    if ($pagenow === 'plugins.php' || $pagenow === 'plugin-install.php' || $pagenow === 'plugin-editor.php' || $pagenow === 'plugin-update.php') {
+        wp_redirect(admin_url());
+        exit;
+    }
+
+    // حذف لینک‌های مربوط به نصب و ویرایش افزونه‌ها از منوی مدیریت
+    unset($submenu['plugins.php'][10]); // لینک "افزودن افزونه"
+    unset($submenu['plugins.php'][15]); // لینک "ویرایش افزونه‌ها"
+}
+add_action('admin_init', 'disable_plugin_installation_admins');
+
+// جلوگیری از نصب، حذف یا به‌روزرسانی افزونه‌ها به طور مستقیم
+function disable_plugin_file_modification() {
+    define('DISALLOW_FILE_MODS', true);
+}
+add_action('init', 'disable_plugin_file_modification');
